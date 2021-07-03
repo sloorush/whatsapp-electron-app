@@ -1,15 +1,7 @@
 {
-  "name": "electron-boilerplate",
-  "productName": "Electron Boilerplate",
+  "name": "whatsapp-electron-app",
   "version": "1.0.0",
-  "description": "The best electron boilerplate to get you started.",
-  "license": "MIT",
-  "repository": "sanjaysunil/Electron-Boilerplate",
-  "author": {
-    "name": "Sanjay Sunil",
-    "email": "sanjaysunil@protonmail.com",
-    "url": "https://sanjaysunil.me"
-  },
+  "description": "Whatsapp that can be installed on any os.",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
