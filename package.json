@@ -2,11 +2,17 @@
   "name": "whatsapp-electron-app",
   "version": "1.0.0",
   "description": "Whatsapp that can be installed on any os.",
+  "repository": "r-ush/whatsapp-electron-app",
+  "author": {
+    "name": "Aarush Bhat",
+    "email": "aarush.bhatt@gmail.com",
+    "url": "https://r-ush.co/"
+  },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --macos --linux --windows",
+    "dist": "electron-builder --linux",
     "win": "electron-builder --windows"
   },
   "dependencies": {
