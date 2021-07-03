@@ -1,75 +1,33 @@
-const {app, BrowserWindow} = require('electron');
-const path = require('path');
+const electron = require("electron");
+const { shell, app, BrowserWindow, session } = electron;
+const HOMEPAGE = "https://web.whatsapp.com/";
 
-// Note: Must match `build.appId` in package.json.
-app.setAppUserModelId('com.company.AppName');
+app.on("ready", () => {
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders["User-Agent"] =
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36";
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
 
-// Electron Reloader
-try {
-  require('electron-reloader')(module);
-} catch { }
-
-let mainWindow;
-// Create Window.
-const createMainWindow = async () => {
-  const win = new BrowserWindow({
-    title: app.name,
-    show: false,
-    width: 600,
-    height: 400,
-    // opacity: 0.7,  Add Opacity to app.
-    icon: __dirname + './build/icon.png',
+  window = new BrowserWindow({
+    width: 1200,
+    height: 900,
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true, // Protect against prototype pollution.
-      enableRemoteModule: false, // Turn off Remote
-      preload: path.join(app.getAppPath(), './app/preload.js'),
     },
   });
-  win.on('ready-to-show', () => {
-    win.show();
-  });
-  win.on('closed', () => {
-    // Dereference the window.
-    // For multiple windows store them in an array.
-    mainWindow = undefined;
-  });
+  window.setMenuBarVisibility(false);
+  window.loadURL(HOMEPAGE);
 
-  // Optional:
-
-  win.removeMenu(); // Remove menu.
-  // win.webContents.openDevTools(); // Open DevTools.
-
-  await win.loadFile(path.join(__dirname, 'app/index.html'));
-  return win;
-};
-
-// Prevent multiple instances of the app
-if (!app.requestSingleInstanceLock()) {
-  app.quit();
-}
-
-app.on('second-instance', () => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore();
+  window.webContents.on("new-window", (ev, url) => {
+    parts = url.split("/");
+    if (parts[0] + "//" + parts[2] != HOMEPAGE) {
+      ev.preventDefault();
+      shell.openExternal(url);
     }
+  });
 
-    mainWindow.show();
-  }
+  window.on("closed", () => {
+    window = null;
+  });
 });
-
-app.on('window-all-closed', function() {
-  if (process.platform !== 'darwin') app.quit();
-});
-
-app.on('activate', async () => {
-  if (!mainWindow) {
-    mainWindow = await createMainWindow();
-  }
-});
-
-(async () => {
-  await app.whenReady();
-  mainWindow = await createMainWindow();
-})();
