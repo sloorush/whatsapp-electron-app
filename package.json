@@ -16,7 +16,7 @@
     "win": "electron-builder --windows"
   },
   "dependencies": {
-    "electron-reloader": "^1.2.1"
+    "electron-reloader": "^1.2.2"
   },
   "devDependencies": {
     "electron": ">=16.0.0",
